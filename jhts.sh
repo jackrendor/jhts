@@ -30,6 +30,7 @@ MACCHANGER="macchanger"
 function usage(){
 	echo " [i] Usage: "
 	echo "       --cache-free        Clear cache"
+	echo "       --commit            Get random commit message" #took from whatthecommit
 	echo "       --help              Display this page"
 	echo "       --hostname          Change hostname"
 	echo "       --interfaces        Lists all avaiable interfaces"
@@ -99,6 +100,9 @@ elif [ "$1" = "--password" ]; then
 		< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c$2
 		 echo ""
 	fi
+elif [ "$1" = "--commit" ]; then
+	# it was actually easy.
+	curl http://whatthecommit.com/index.txt
 elif [[ $EUID -ne 0 ]]; then
 	echo " [!] No root permission detected [!]"
 	echo " [i] To run this command, you should be root"
