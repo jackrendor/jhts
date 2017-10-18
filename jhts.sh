@@ -26,7 +26,6 @@ INCOGNITONAME="hp-windows"
 PERSONALIZATEDNAME="iPhone"
 
 HOSTNAMECTL="hostnamectl"
-MACCHANGER="macchanger"
 function usage(){
 	echo " [i] Usage: "
 	echo "       --cache-free        Clear cache"
@@ -230,7 +229,8 @@ elif [ "$1" = "--monitor-mode" ]; then
 			/bin/systemctl stop NetworkManager.service
 			echo " [+] Changing mac..."
 			ifconfig $3 down
-			$MACCHANGER -r $3
+			newmac=$((printf "40")&&(for i in {1..10} ; do echo -n ${hexchars:$(( $RANDOM % 16 )):1} ; done | sed -e 's/\(..\)/:\1/g') )
+			ifconfig $3 hw ether $newmac
 			echo " [+] Starting monitor mode..."
 			iwconfig $3 mode monitor
 			ifconfig $3 up
