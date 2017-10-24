@@ -26,6 +26,7 @@ INCOGNITONAME="hp-windows"
 PERSONALIZATEDNAME="iPhone"
 
 HOSTNAMECTL="hostnamectl"
+
 function usage(){
 	echo " [i] Usage: "
 	echo "       --cache-free        Clear cache"
@@ -216,14 +217,12 @@ elif [ "$1" = "--monitor-mode" ]; then
 		echo " [i] Usage: $0 --monitor-mode <interface>"
 		echo " [i]        $0 --monitor-mode -nm <interface>"
 		echo " [i]        $0 --monitor-mode --restore <interface>"
-
 	elif [ "$2" = "-nm" ]; then
 		if [ -z "$3" ]; then
 			echo " [!] Error. Missing argument [!]"
 			echo " [i] Usage: $0 --monitor-mode <interface>"
 			echo " [i]        $0 --monitor-mode -nm <interface>"
 			echo " [i]        $0 --monitor-mode --restore <interface>"
-
 		else
 			echo " [+] Stopping Network Manager..."
 			/bin/systemctl stop NetworkManager.service
