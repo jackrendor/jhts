@@ -66,7 +66,7 @@ elif [ "$1" = "--ip" ]; then
 	elif [ "$2" == "lan" ]; then
 		ip address | grep "scope global " | sed -e "s/.*inet//" -e "s/\/.*//"
 	elif [ "$2" == "wan" ]; then
-		echo -n 'External IP: ' && curl http://checkip.amazonaws.com/
+		echo -n 'External IP: ' && curl http://checkip.amazonaws.com/ 2>/dev/null
 	else
 		echo " [!] Wrong argument [!]"
 		echo " [i] Usasge:   $0 --ip <lan/wan>"
@@ -81,11 +81,11 @@ elif [ "$1" = "--tor" ]; then
 		echo " [i]          $0 --tor --switchnode"
 	else
 		if [ "$2" = "--ip" ]; then
-			echo -n 'Exit node: ' && curl --socks5 127.0.0.1:9050 http://checkip.amazonaws.com/
+			echo -n 'Exit node: ' && curl --socks5 127.0.0.1:9050 http://checkip.amazonaws.com/ 2>/dev/null
 		elif [ "$2" = "--switchnode" ]; then
-			echo -n 'Current exit node: ' && curl --socks5 127.0.0.1:9050 http://checkip.amazonaws.com/
+			echo -n 'Current exit node: ' && curl --socks5 127.0.0.1:9050 http://checkip.amazonaws.com/ 2>/dev/null
 			( (echo authenticate '""'; echo signal newnym; echo quit) | nc localhost 9051 ) > /dev/null
-			echo -n 'New Exit node: ' && curl --socks5 127.0.0.1:9050 http://checkip.amazonaws.com/
+			echo -n 'New Exit node: ' && curl --socks5 127.0.0.1:9050 http://checkip.amazonaws.com/ 2>/dev/null
 		else
 			echo " [!] Wrong argument [!]"
 			echo " [i] Usage:   $0 --tor --ip"
@@ -102,7 +102,7 @@ elif [ "$1" = "--password" ]; then
 	fi
 elif [ "$1" = "--commit" ]; then
 	# it was actually easy.
-	curl http://whatthecommit.com/index.txt
+	curl http://whatthecommit.com/index.txt 2>/dev/null
 elif [[ $EUID -ne 0 ]]; then
 	echo " [!] No root permission detected [!]"
 	echo " [i] To run this command, you should be root"
