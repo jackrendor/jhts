@@ -20,7 +20,7 @@
 #  MA 02110-1301, USA.
 #
 
-VERSION="0.4.6"
+VERSION="0.4.7"
 DEFAULTNAME="null"
 INCOGNITONAME="hp-windows"
 PERSONALIZATEDNAME="iPhone"
@@ -45,6 +45,15 @@ function usage(){
 	echo "       --tor               Manage tor" # check http://stackoverflow.com/a/33726166 to configure it.
 	echo "       --version           Display version of this script"
 	echo ""
+}
+
+function am_i_root(){
+	if [[ $EUID -ne 0 ]]; then
+		echo " [!] No root permission detected [!]"
+		echo " [i] To run this command, you should be root"
+		echo ""
+		exit
+	fi
 }
 
 echo " [+] Jack Hacking Tool Set [+]"
@@ -103,12 +112,9 @@ elif [ "$1" = "--password" ]; then
 elif [ "$1" = "--commit" ]; then
 	# it was actually easy.
 	curl http://whatthecommit.com/index.txt 2>/dev/null
-elif [[ $EUID -ne 0 ]]; then
-	echo " [!] No root permission detected [!]"
-	echo " [i] To run this command, you should be root"
-	echo ""
 ##################################################################
 elif [ "$1" = "--install" ]; then
+	am_i_root
 	SCRIPT=$(readlink -f $0)
 	cp $SCRIPT /usr/sbin/jhts
 	chmod +x /usr/sbin/jhts
@@ -123,6 +129,7 @@ elif [ "$1" = "--install" ]; then
 	exit 0
 ##################################################################
 elif [ "$1" = "--hostname" ]; then
+	am_i_root
 	if [ -z "$2" ]; then
 		echo " [!] Error. Missing argument [!]"
 		echo " [i] Usage: $0 --hostname <default/personalizated/incognito>"
@@ -143,6 +150,7 @@ elif [ "$1" = "--hostname" ]; then
 	fi
 ##################################################################
 elif [ "$1" = "--cache-free" ]; then
+	am_i_root
 	free
 	echo "[+] Executing 'sync'..."
 	sync
@@ -179,6 +187,7 @@ elif [ "$1" = "--macchange" ]; then
 	fi
 ##################################################################
 elif [ "$1" = "--ipchange" ]; then
+	am_i_root
 	if [ -z "$5" ]; then
 		echo "[!] Error. Missing argument. [!]"
 		echo "[i] Usage: $0 --ipchange <newip> <netmask> <gateway> <interface>"
@@ -198,6 +207,7 @@ elif [ "$1" = "--ipchange" ]; then
 	fi
 ##################################################################
 elif [ "$1" = "--ipforward" ]; then
+	am_i_root
 	if [ -z "$2" ]; then
 		echo " [!] Error. Missing argument [!]"
 		echo " [i] Usage: $0 --ipforward <enable/disable>"
@@ -212,6 +222,7 @@ elif [ "$1" = "--ipforward" ]; then
 	fi
 ##################################################################
 elif [ "$1" = "--monitor-mode" ]; then
+	am_i_root
 	if [ -z "$2" ]; then
 		echo " [!] Error. Missing argument [!]"
 		echo " [i] Usage: $0 --monitor-mode <interface>"
@@ -224,8 +235,6 @@ elif [ "$1" = "--monitor-mode" ]; then
 			echo " [i]        $0 --monitor-mode -nm <interface>"
 			echo " [i]        $0 --monitor-mode --restore <interface>"
 		else
-			echo " [+] Stopping Network Manager..."
-			/bin/systemctl stop NetworkManager.service
 			echo " [+] Changing mac..."
 			ifconfig $3 down
 			newmac=$((printf "40")&&(for i in {1..10} ; do echo -n ${hexchars:$(( $RANDOM % 16 )):1} ; done | sed -e 's/\(..\)/:\1/g') )
@@ -245,12 +254,8 @@ elif [ "$1" = "--monitor-mode" ]; then
 			ifconfig $3 down
 			iwconfig $3 mode managed
 			ifconfig $3 up
-			echo " [+] Restoring Network Manager..."
-			/bin/systemctl start NetworkManager.service
 		fi
 	else
-		echo " [+] Stopping Network Manager..."
-		/bin/systemctl stop NetworkManager.service
 		echo " [+] Starting monitor mode..."
 		ifconfig $2 down
 		iwconfig $2 mode monitor
