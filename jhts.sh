@@ -29,6 +29,7 @@ HOSTNAMECTL="hostnamectl"
 
 function usage(){
 	echo " [i] Usage: "
+	echo "       --battery           Print the percent of the battery"
 	echo "       --cache-free        Clear cache"
 	echo "       --commit            Get random commit message" #took from whatthecommit
 	echo "       --help              Display this page"
@@ -67,6 +68,11 @@ elif [ "$1" = "--help" ]; then
 elif [ "$1" = "--version" ]; then
 	echo "Version $VERSION"
 	echo ""
+	exit 0
+elif [ "$1" = "--battery" ]; then
+	now=`cat /sys/class/power_supply/BAT1/charge_now`;
+	full=`cat /sys/class/power_supply/BAT1/charge_full`;
+	echo "Battery: $((now*100/full))%"
 	exit 0
 elif [ "$1" = "--ip" ]; then
 	if [ -z "$2" ]; then
