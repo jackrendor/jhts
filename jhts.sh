@@ -70,8 +70,8 @@ elif [ "$1" = "--version" ]; then
 	echo ""
 	exit 0
 elif [ "$1" = "--battery" ]; then
-	now=`cat /sys/class/power_supply/BAT1/charge_now`;
-	full=`cat /sys/class/power_supply/BAT1/charge_full`;
+	now=$(cat /sys/class/power_supply/BAT1/charge_now);
+	full=$(cat /sys/class/power_supply/BAT1/charge_full);
 	echo "Battery: $((now*100/full))%"
 	exit 0
 elif [ "$1" = "--ip" ]; then
