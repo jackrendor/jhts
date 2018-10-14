@@ -20,7 +20,7 @@
 #  MA 02110-1301, USA.
 #
 
-VERSION="0.4.7"
+VERSION="0.4.8"
 DEFAULTNAME="null"
 INCOGNITONAME="hp-windows"
 PERSONALIZATEDNAME="iPhone"
@@ -175,20 +175,24 @@ elif [ "$1" = "--cache-free" ]; then
 	fi
 	free
 elif [ "$1" = "--macchange" ]; then
+	am_i_root
 	if [ -z "$2" ]; then
 		echo "[!] Error. Missing argument. [!]"
 		echo "[i] Usage: $0 --macchange <interface> <mac address>"
 		echo "           $0 --macchange random <interface>"
 	else
 		echo " [i] Changing mac.."
-		ifconfig $2 down
 		if [ "$2" = "random" ]; then
-			newmac=$((printf "40")&&(for i in {1..10} ; do echo -n ${hexchars:$(( $RANDOM % 16 )):1} ; done | sed -e 's/\(..\)/:\1/g') )
+			ifconfig $3 down
+			newmac=$(printf '40:%02X:%02X:%02X:%02X:%02X' $[RANDOM%256] $[RANDOM%256] $[RANDOM%256] $[RANDOM%256] $[RANDOM%256])
+			echo "[i] Setting mac to $newmac.."
 			ifconfig $3 hw ether $newmac
+			ifconfig $3 up
 		else
+			ifconfig $2 down
 			ifconfig $2 hw ether $3
+			ifconfig $2 up
 		fi
-		ifconfig $2 up
 		echo " [ok] Done."
 	fi
 ##################################################################
@@ -243,7 +247,8 @@ elif [ "$1" = "--monitor-mode" ]; then
 		else
 			echo " [+] Changing mac..."
 			ifconfig $3 down
-			newmac=$((printf "40")&&(for i in {1..10} ; do echo -n ${hexchars:$(( $RANDOM % 16 )):1} ; done | sed -e 's/\(..\)/:\1/g') )
+			newmac=$(printf '40:%02X:%02X:%02X:%02X:%02X' $[RANDOM%256] $[RANDOM%256] $[RANDOM%256] $[RANDOM%256] $[RANDOM%256])
+			echo " [+] Setting mac to $newmac"
 			ifconfig $3 hw ether $newmac
 			echo " [+] Starting monitor mode..."
 			iwconfig $3 mode monitor
