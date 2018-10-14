@@ -41,7 +41,6 @@ function usage(){
 	echo "       --ipforward         Manage ipforward"
 	echo "       --macchange         Change MAC Address"
 	echo "       --monitor-mode      Enable montor mode"
-	echo "       --network-manager   Manage NetworkManager"
 	echo "       --password          Generate password"
 	echo "       --tor               Manage tor" # check http://stackoverflow.com/a/33726166 to configure it.
 	echo "       --version           Display version of this script"
