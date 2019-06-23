@@ -20,7 +20,11 @@
 #  MA 02110-1301, USA.
 #
 
-VERSION="0.4.8"
+# Exit immediately if a command runs into an error.
+set -e
+
+
+VERSION="0.4.9"
 DEFAULTNAME="null"
 INCOGNITONAME="hp-windows"
 PERSONALIZATEDNAME="iPhone"
